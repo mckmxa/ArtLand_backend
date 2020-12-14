@@ -52,22 +52,24 @@ const placeNewOrder = async (req,res) => {
             if(error) throw error
             if(newOrderId.insertId > 0){
             products.forEach(async (p) => {
-                    db.database.query(`SELECT quantity FROM products as p WHERE id = p.id`, (error, results) => {
+                    db.database.query(`SELECT quantity FROM products as p WHERE id = ${p.id}`, (error, results) => {
                     if(error) throw error
                     let inCart = parseInt(p.incart)
-                    console.log(results.quantity);
-                    if (results.quantity > 0) {
-                        results.quantity = results.quantity - inCart
-                        if (results.quantity < 0) {
-                            results.quantity = 0
+                    //console.log(results);
+                    //console.log(p.id);
+                    //console.log(results[p.id-1].quantity);
+                    if (results[0].quantity > 0) {
+                        results[0].quantity = results[0].quantity - inCart
+                        if (results[0].quantity < 0) {
+                            results[0].quantity = 0
                         }
                     } else {
-                        results.quantity = 0
+                        results[0].quantity = 0
                     }
                 //Insert order details with the newly created order Id
                 db.database.query(`INSERT INTO orders_details (order_id, product_id, quantity) VALUES (${newOrderId.insertId}, ${p.id}, ${inCart})`, (error) => {
                     if(error) throw error
-                    db.database.query(`UPDATE products SET quantity = ${results.quantity} WHERE id = ${p.id} `, (error) => {
+                    db.database.query(`UPDATE products SET quantity = ${results[0].quantity} WHERE id = ${p.id} `, (error) => {
                         if(error) throw error
                     })
                     
