@@ -16,6 +16,7 @@ router.post('/login', [valid.hasAuthFields, valid.doesPasswordAndUserMatch], (re
         expiresIn: '4h'
     });
     res.json({token: token, auth: true, email: req.body.email, username: req.body.username});
+    console.log("Login successful")
 });
 
 

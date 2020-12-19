@@ -30,16 +30,16 @@ module.exports = {
         let errors = []
 
         if (req.body) {
-            /*if (!req.body.email) {
+            if (!req.body.email) {
                 errors.push('Missing email field')
             }
-            */
+            
             if (!req.body.password) {
                 errors.push('Missing password field')
             }
-            if (!req.body.username) {
+            /*if (!req.body.username) {
                 errors.push('Missing username field')
-            }
+            }*/
 
             if (errors.length) {
                 return res.status(400).send({errors: errors.join(',')})
@@ -53,23 +53,23 @@ module.exports = {
     // obecnie uzytkownik musi podczas logowania podac username i haslo - w celu zmiany odkomentowac odp komentarze
     doesPasswordAndUserMatch: async (req, res, next) => {
         const myPlaintextPassword = req.body.password
-        //const myEmail = req.body.email
-        const myUsername = req.body.username
-        db.database.query(`SELECT * FROM users WHERE username LIKE '${myUsername}'`, async (error, user) => {
+        const myEmail = req.body.email
+        //const myUsername = req.body.username
+        db.database.query(`SELECT * FROM users WHERE email LIKE '${myEmail}'`, async (error, user) => {
         if (error) throw error
         if (user.length>0) {
             const match = await bcrypt.compare(myPlaintextPassword, user[0].password);
             
             if (match) {
-                req.username = user[0].username
-                //req.email = user[0].mail
+                //req.username = user[0].username
+                req.email = user[0].mail
                 next()
             } else {
-                res.status(401).send("Username or password incorrect")
+                res.status(401).send("Username/Email or password incorrect")
             }
             
         } else {
-            res.status(401).send("Username or password incorrect")
+            res.status(401).send("Username/Email or password incorrect")
         }
     })
     }
