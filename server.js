@@ -5,7 +5,9 @@ const app = express();
 const dotenv = require('dotenv')
 
 dotenv.config({ path: './.env' })
-const port = process.env.DATABASE_PORT || 3000
+const port = process.env.DATABASE_PORT
+
+//const generate = require('./helpers/generate_keys')
 
 // wstepny router
 const productsRoute = require('./routes/products')

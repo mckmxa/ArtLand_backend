@@ -1,7 +1,7 @@
 const express = require('express')
 const {check, validationResult, body} = require('express-validator')
 const router = express.Router()
-const valid = require('../validation')
+const valid = require('../helpers/validation')
 const db = require('../config/connection')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
